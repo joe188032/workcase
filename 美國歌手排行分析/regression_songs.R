@@ -10,8 +10,11 @@ songs$songtitle[which.max(songs$tempo)]
 SongsTrain = subset(songs,year<=2009)
 
 
+
+#進入top10的歌手佔的資料量太少，如此將造成模型傾向猜0
 SongTrain1 = subset(SongsTrain,Top10==0)
 SongTrain2 = subset(SongsTrain,Top10==1)
+
 
 s1 = sample_n(SongTrain1,1000)
 s2 = sample_n(SongTrain2,1000)
@@ -28,6 +31,12 @@ SongsLog3 = glm(Top10 ~ .-energy, data=SongsTrain, family=binomial)
 SongsLog1 = glm(Top10 ~ ., data=newTrain, family=binomial)
 SongsLog2 = glm(Top10 ~ .-loudness,data=newTrain, family=binomial)
 SongsLog3 = glm(Top10 ~ .-energy, data=newTrain, family=binomial)
+SongsLog4 = glm(formula = Top10 ~ timesignature_confidence + loudness + key_confidence + 
+                  pitch + timbre_0_min + timbre_0_max + timbre_1_min + timbre_2_min + 
+                  timbre_3_max + timbre_4_min + timbre_4_max + timbre_5_min + 
+                  timbre_6_min + timbre_6_max + timbre_7_min + timbre_10_min + 
+                  timbre_10_max + timbre_11_min + timbre_11_max, family = binomial, 
+                data = newTrain)
 
 testPredict = predict(SongsLog4, newdata=SongsTest, type="response")
 confusion = table(SongsTest$Top10, testPredict >= 0.5) #row為實際，column為預測方向(右邊參數為判斷T or F)
@@ -35,12 +44,6 @@ accuracy = (309+19)/(309+5+40+19)
 table(SongsTest$Top10)
 sensitivity = 19/(19+40) 
 specificity = 309/(309+5) 
-SongsLog4 = glm(formula = Top10 ~ timesignature_confidence + loudness + key_confidence + 
-      pitch + timbre_0_min + timbre_0_max + timbre_1_min + timbre_2_min + 
-      timbre_3_max + timbre_4_min + timbre_4_max + timbre_5_min + 
-      timbre_6_min + timbre_6_max + timbre_7_min + timbre_10_min + 
-      timbre_10_max + timbre_11_min + timbre_11_max, family = binomial, 
-    data = newTrain)
 summary(SongsLog4) 
 #by newtrain
 sensitivity = confusion[4]/(confusion[2]+confusion[4])
