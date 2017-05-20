@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "coefficients = read.csv(\"coefficient.csv\")\nregression_x = read.csv(\"regression_x.csv\")\n",
+    "created" : 1483364749808.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "308924022",
+    "id" : "FD2874AD",
+    "lastKnownWriteTime" : 1483364915,
+    "last_content_update" : 1483364915233,
+    "path" : "C:/NTU Space/b01610029@ntu.edu.tw/MySyncFolder/regression_price/source.R",
+    "project_path" : "source.R",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

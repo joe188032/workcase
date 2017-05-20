@@ -1,0 +1,10 @@
+name: regression
+title:
+account: drift
+server: shinyapps.io
+appId: 149601
+bundleId: 671254
+url: https://drift.shinyapps.io/regression/
+when: 1483704517.24333
+asMultiple: FALSE
+asStatic: FALSE

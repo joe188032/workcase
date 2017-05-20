@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1483365581663.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "F3F0A38E",
+    "lastKnownWriteTime" : 7308604914264011873,
+    "last_content_update" : 1483365581663,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "1CE90D6A",
+        "caption" : "regression_x",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=regression_x&cache_key=1CE90D6A",
+        "displayedObservations" : "9684",
+        "environment" : "",
+        "object" : "regression_x",
+        "preview" : "0",
+        "totalObservations" : "9684",
+        "variables" : "97"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"source.R\")\n\n\nshinyServer(function(input, output) {\n\n \n    \n  output$rentprice <- renderText({\n    \n    x = regression_x[1,]\n    x[,3:18]=0\n    x[,21:97]=0\n    x[\"area\"] = input$area\n    \n    if (input$section != \"d20\") {x[input$section] = 1}\n\n    if (input$kind != \"d40\") {x[input$kind] = 1}\n\n    if (!is.null(input$top)) {x[input$top] = 1}\n\n    \n    x=as.matrix(x)\n    b=coefficients[,2]\n    b=as.matrix(b)\n    y_hat=round(x%*%b,2)\n\n    paste0(\"預測租金：\",y_hat)\n    \n  })\n\n\n})\n",
+    "created" : 1482757316610.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1341097049",
+    "id" : "7D612116",
+    "lastKnownWriteTime" : 1483370035,
+    "last_content_update" : 1483370035765,
+    "path" : "C:/NTU Space/b01610029@ntu.edu.tw/MySyncFolder/regression_price/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

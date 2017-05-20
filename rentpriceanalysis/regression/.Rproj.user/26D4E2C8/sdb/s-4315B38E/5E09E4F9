@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1483363195274.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "5E09E4F9",
+    "lastKnownWriteTime" : 7308604914264011873,
+    "last_content_update" : 1483363195274,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "4934B56B",
+        "caption" : "coefficients",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=coefficients&cache_key=4934B56B",
+        "displayedObservations" : "97",
+        "environment" : "",
+        "object" : "coefficients",
+        "preview" : "0",
+        "totalObservations" : "97",
+        "variables" : "2"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
