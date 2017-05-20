@@ -1,6 +1,7 @@
 library(dplyr)
 library(readr)
 library(e1071)
+library(miscTools)
 trainset = read_csv("trainset-2.csv")
 colnames(trainset)
 str(trainset)
@@ -66,11 +67,11 @@ test = dta4
 
 #SVR
 tune(svm,price~.,data = train,ranges = list(epsilon = seq(0,0.2,0.01), cost = 2^(-1:8),gamma = 2^(-5:5)))
-model1 = svm(price~.,data = train,gamma=0.125,cost=1,epsilon=0.7,kernel="radial",
+model1 = svm(price~.,data = train,gamma=0.125,cost=1,epsilon=0.1,kernel="radial",
              type="eps")
 pred = predict(model1,test)
 r2 = 1 - sum((test$price-pred)^2)/sum((test$price-mean(train$price))^2)
-
+r2 = rSquared(test$price,test$price-pred)
 #random forest
 levels(train$brand)
 train$brand = factor(train$brand,levels = levels(testdta$brand))
@@ -78,7 +79,7 @@ test$brand = factor(test$brand,levels = levels(testdta$brand))
 testdta$fuelType = factor(testdta$fuelType,levels = levels(train$fuelType))
 
 
-
+tune.randomForest(price~.,data = train,ntree = seq(50,1000,by=20))
 rf = randomForest(price~.,data = train)
 pred2 = predict(rf,test)
 r2 = rSquared(test$price,test$price-predict(rf,test))
@@ -99,10 +100,6 @@ levels(testdta$fuelType)
 pred3 = predict(rf,testdta)
 levels(testdta$gearbox)
 levels(train$gearbox)
-check = function(x){
-  a = testdta[[x]][which(!levels(testdta[[x]]) %in% levels(train[[x]]))]
-  return(a)
-}
 
 #當兩筆資料的資料結構完全相同時，rf的prediction才能work，故在此將
 #train的資料和最後上傳的test資料的factor變為相同的樣子
