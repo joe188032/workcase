@@ -111,5 +111,28 @@ sapply(colnames(testdta),check)
 
 submit = data.frame(id = finaltest$id,predict = pred3)
 write.table(submit,file = "submit.csv",sep = ",",col.names = T,row.names = F)
+#======================================================================
 
+
+
+tune.randomForest(price~.,data = train,ntree = seq(50,1000,by=20))
+
+importance(rf)
+finaltest = read_csv("testset.csv")
+testdta = data.frame(gearbox = as.factor(finaltest$gearbox),
+                     brand = as.factor(finaltest$brand),
+                     notRepairedDamage = as.factor(finaltest$notRepairedDamage),
+                     fuelType = as.factor(finaltest$fuelType),
+                     vehicleType = as.factor(finaltest$vehicleType),
+                     year = (2017-finaltest$yearOfRegistration))
+
+dta$brand = factor(dta$brand,levels = levels(testdta$brand))
+testdta$fuelType = factor(testdta$fuelType,levels = levels(dta$fuelType))
+
+rf = randomForest(price~.,data = dta)
+pred4 = predict(rf,testdta)
+
+
+submit = data.frame(id = finaltest$id,predict = pred4)
+write.table(submit,file = "submit.csv",sep = ",",col.names = T,row.names = F)
 
