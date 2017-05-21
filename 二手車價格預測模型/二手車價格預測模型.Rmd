@@ -1,0 +1,157 @@
+---
+title: "二手車預測模型"
+author: "林德昌"
+date: "2017年5月18日"
+output: html_document
+---
+```{r }
+library(dplyr)
+library(readr)
+library(e1071)
+library(miscTools)
+library(randomForest)
+trainset = read_csv("trainset-2.csv")
+colnames(trainset)
+usedcol = c("vehicleType","gearbox","fuelType","brand","notRepairedDamage")
+trainset[usedcol] = lapply(trainset[usedcol],function(x){as.factor(x)})
+```
+
+## 變數選取
+在挑選變數之前，我們先畫出各變數和價格的關係圖，從圖形上能夠看出各變數和價格是否有一些相關性。
+
+```{r}
+with(trainset,plot(powerPS,price,type = "p"))
+
+```
+從圖表上來看，powerPS(馬力)顯然受到離群值的影響，故無法從圖形當中得知馬力和價格的關係。
+
+```{r}
+trainset1 =trainset[trainset$powerPS<=1000,]  #powerPS is not a good explanatory.
+with(trainset1,plot(powerPS,price,type = "p"))
+```
+由於powerPS(馬力)存在離群值，我們將馬力小於等於1000的資料篩選出，再畫一次圖，發現馬力和價格之間並沒有相關性。
+
+
+```{r}
+with(trainset,plot(kilometer,price,type = "p"))  #kilometer is not a good explanatory.
+
+```
+由圖中可以看出，kilometer(里程數)和價格並沒有明確的相關性。
+
+```{r}
+with(trainset,plot(ad_exist_time,price))
+
+```
+由圖中可以看出，ad_exist_time(商品在網站上留存的時間)和價格高低並沒有明確的相關性，因而亦不考慮這項變數。
+
+```{r}
+with(trainset,plot(monthOfRegistration,price))
+```
+由圖中可以看出，monthOfRegistration(汽車註冊的月份)和價格高低亦無明確的相關性。
+
+```{r}
+#以下為可用變數
+with(trainset,plot(gearbox,price,type = "h"))
+
+```
+由圖中可以看出，automatik(自排)和manuell(手排)之間的平均價格是有差異的，因此可列入變數之中來跑看看。
+
+```{r}
+with(trainset,plot(brand,price))
+
+```
+從圖中可以看出，各個brand(品牌)之間二手車的平均價格是有差異的，因此可列入變數之中來跑看看。
+
+```{r}
+with(trainset,plot(notRepairedDamage,price))
+
+```
+notRepairedDamage代表汽車是否有損害但尚未修好的地方，從圖形上來看，ja(是)的二手車平均價格明顯低於nein(沒有)的價格，因而此變數可列入模型考慮。
+
+```{r}
+with(trainset,plot(fuelType,price))
+
+```
+
+從圖中可以看出，各fuelType(燃料種類)之間二手車的平均價格是有差異的，因此可列入變數之中來跑看看。
+
+```{r}
+year = 2017 - trainset$yearOfRegistration
+with(trainset,plot(year,price))
+cor(year,trainset$price)
+```
+我們以今年2017減去二手車的註冊年度(yearOfRegistration)作為其車齡(year)，從圖中可以看出價格和車齡之間有負向關係，相關係數也為-0.513。因此車齡(year)是可以列入模型的變數。
+
+
+##看各類別資料量的比較
+```{r}
+barplot(table(trainset$vehicleType))
+barplot(table(trainset$gearbox))
+barplot(table(trainset$brand))
+barplot(table(trainset$notRepairedDamage))
+barplot(table(trainset$fuelType))
+sort(table(trainset$brand),T)
+sort(table(trainset$gearbox),T)
+sort(table(trainset$vehicleType),T)
+sort(table(trainset$notRepairedDamage),T)
+sort(table(trainset$fuelType),T)
+```
+
+
+## 將資料分為trainset和testset
+從各類別資料量的比較圖當中，可看出有些變數存在著資料筆數較少的類別，少到連隨機抽樣的方式有可能抽不到。因此我們讓那些少數類別直接"內定"為trainset，以確保訓練模型時能夠訓練到類別較少的部分。
+
+```{r}
+#將較少資料量的類別"內定"為trainset的一部分，以求訓練過程得以顧及到少數類別
+sebrand = names(table(trainset$brand))[table(trainset$brand)<200]
+senot = "ja"
+sefuel = names(table(trainset$fuelType))[table(trainset$fuelType)<120]
+segearbox = "automatik"
+sevetype = names(table(trainset$vehicleType))[table(trainset$vehicleType)<500]
+
+dta = data.frame(price = as.numeric(trainset$price),
+                 gearbox = as.factor(trainset$gearbox),
+                 brand = as.factor(trainset$brand),
+                 notRepairedDamage = as.factor(trainset$notRepairedDamage),
+                 fuelType = as.factor(trainset$fuelType),
+                 vehicleType = as.factor(trainset$vehicleType),
+                 year = (2017-trainset$yearOfRegistration))
+
+dta1 = dta[dta$brand %in% sebrand|dta$fuelType %in% sefuel,]
+dta2 = dta[-as.numeric(row.names(dta1)),]
+
+set.seed(123)
+num = sample(nrow(dta2),3500-1538)
+dta3 = dta2[num,]
+dta4 = dta2[-num,]
+
+train = rbind(dta1,dta3)
+test = dta4
+
+```
+
+##用SVR預測
+```{r}
+#SVR
+model1 = svm(price~.,data = train,gamma=0.125,cost=1,epsilon=0.1,kernel="radial",
+             type="eps")
+pred = predict(model1,test)
+r2 = rSquared(test$price,test$price-pred)
+print(model1)
+r2
+
+```
+R-squared值為0.716
+
+
+##用Random Forest預測
+```{r}
+#random forest
+rf = randomForest(price~.,data = train)
+pred2 = predict(rf,test)
+r2 = rSquared(test$price,test$price-predict(rf,test))
+print(rf)
+r2
+```
+R-squared值為0.715
+
