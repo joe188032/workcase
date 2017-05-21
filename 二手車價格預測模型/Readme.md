@@ -12,4 +12,7 @@ usedcarcode.R:預測二手車價格的模型。<br>
 、「有無未修好之損毀」、「燃料種類」、「車種」及「車齡」來做為預測價格的變數，以trainset之資料做模型訓練，再將test.csv的二手車商品特徵帶入模型當中，
 輸出submit.csv的結果，此外，我們分別使用了random forest和SVR兩種模型來做嘗試。<br>
 # 結果 <br>
-目前上傳submit.csv到競賽主辦單位的成績結果(R^2)為72.26014%。
+目前上傳submit.csv到競賽主辦單位的成績結果(R^2)為72.26014%。<br>
+
+# 分析詳細過程 <br>
+https://joe188032.github.io/workcase/%E4%BA%8C%E6%89%8B%E8%BB%8A%E5%83%B9%E6%A0%BC%E9%A0%90%E6%B8%AC%E6%A8%A1%E5%9E%8B/%E4%BA%8C%E6%89%8B%E8%BB%8A%E5%83%B9%E6%A0%BC%E9%A0%90%E6%B8%AC%E6%A8%A1%E5%9E%8B.html
