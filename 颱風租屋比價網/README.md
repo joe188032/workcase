@@ -1,5 +1,5 @@
 # 操作方式
-https://joe188032.github.io/workcase/颱風租屋比價網/index.html
+
 
 # 專案敘述 <br>
 此專案是和組員一同完成的專案，內容是用線性迴歸和quantile regression來預測使用者所輸入租屋地點的房屋租金，此外在還可計算出距離租屋處最近的捷運站和公園（用googlemap api爬出經緯度，然後計算出直線距離)。
